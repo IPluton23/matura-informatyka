@@ -60,13 +60,14 @@ def poprawnosc(obraz):
     bledy_poziom = 0  # ilość błędów w ostatniej kolumnie obrazu
 
     for line in obraz:
+        # Obrócenie obrazu
         for i in range(20):
             pion_obraz[i] += line[i]
-
+    # Zapis bitów parzystości do tablic
     for i in range(20):
         poziom_bity.append(obraz[i][-1])
         pion_bity.append(pion_obraz[i][-1])
-
+    # Zliczanie błędów parzystości w poziomie i pionie
     for i in range(20):
         bit1 = new_obraz[i].count("1") % 2
         if str(bit1) != poziom_bity[i]:
@@ -100,12 +101,12 @@ max_czarne = 0  # najwieksza liczba czarnych pikseli
 rekurencyjne = []  # tablica z obrazami rekurencyjnymi
 
 naprawialnosc = []  # przechowuje info o poprawnosci/naprawialnosci/nienaprawialnosci i liczbie bledow kazdego z obrazka
-max_bledy = 0
-poprawne = 0
-naprawialne = 0
-nienaprawialne = 0
+max_bledy = 0  # maksymalna ilosc bledow w jednym obrazku
+poprawne = 0  # ilość poprawnych obrazków
+naprawialne = 0  # ilość naprawialnych obrazków
+nienaprawialne = 0  # ilość nienaprawialnych obrazków
 
-for i, obraz in enumerate(calosc):
+for obraz in calosc:
     # ZADANIE 1
     sprawdz = czyRewers(usun_ramke(obraz))
     if sprawdz[0]:
@@ -119,7 +120,7 @@ for i, obraz in enumerate(calosc):
     naprawialnosc.append(poprawnosc(obraz))
 
 
-
+# ZADANIE 3
 for item in naprawialnosc:
     if item[1] > max_bledy:
         max_bledy = item[1]
