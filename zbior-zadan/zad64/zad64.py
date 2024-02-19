@@ -25,6 +25,7 @@ def czyRewers(obraz):
     else:
         return [False, jedynki]
 
+
 # Sprawdzanie czy obrazki sa rekurencyjne (zad 64.2)
 def czyRekurencyjny(obraz):
     # tablica 10x10 jest ćwiartką obrazu 20x20
@@ -59,6 +60,9 @@ def poprawnosc(obraz):
     bledy_pion = 0  # ilość błędów w ostatnim wierszu obrazu
     bledy_poziom = 0  # ilość błędów w ostatniej kolumnie obrazu
 
+    nr_wiersza = 0  # nr wiersza w którym znajduje się błąd
+    nr_kolumny = 0  # nr kolumny w której znajduje się błąd
+
     for line in obraz:
         # Obrócenie obrazu
         for i in range(20):
@@ -72,17 +76,19 @@ def poprawnosc(obraz):
         bit1 = new_obraz[i].count("1") % 2
         if str(bit1) != poziom_bity[i]:
             bledy_poziom += 1
+            nr_wiersza = i + 1
 
         bit2 = pion_obraz[i][:20].count("1") % 2
         if str(bit2) != pion_bity[i]:
             bledy_pion += 1
+            nr_kolumny = i + 1
 
     if bledy_poziom == 0 and bledy_pion == 0:
         return ["poprawny", bledy_pion + bledy_poziom]
     elif bledy_poziom >1 or bledy_pion > 1:
         return ["nienaprawialny", bledy_pion + bledy_poziom]
     else:
-        return ["naprawialny", bledy_pion + bledy_poziom]
+        return ["naprawialny", bledy_pion + bledy_poziom, nr_wiersza, nr_kolumny]
 
 
 
@@ -119,17 +125,26 @@ for obraz in calosc:
     # ZADANIE 3
     naprawialnosc.append(poprawnosc(obraz))
 
+print(naprawialnosc)
 
-# ZADANIE 3
-for item in naprawialnosc:
+# ZADANIE 3 i 4
+for i, item in enumerate(naprawialnosc):
+    # Sprawdzanie największej ilości błędów
     if item[1] > max_bledy:
         max_bledy = item[1]
+    # Zliczanie ilości obrazów pop./napraw./nienapraw.
     if item[0] == "poprawny":
         poprawne += 1
     elif item[0] == "naprawialny":
         naprawialne += 1
+
+        # jezeli wiersz / kolumna == 0 to błąd występuje w bicie parzystości
+        if item[2] == 0: item[2] = 21
+        if item [3] == 0: item[3] = 21
+        odp.write("\n\n Numer obrazka naprawialnego: {} \tWiersz: {} \tKolumna:{}".format(i, item[2], item[3]) )
     else:
         nienaprawialne += 1
+
 
 # Zapis odpowiedzi do pliku
 odp.write("Ilość rewersów: {} najwięcej pikseli: {}".format(len(rewersy), max_czarne))
@@ -137,6 +152,7 @@ odp.write("\n\nIlość obrazów rekurencyjnych: {} \nPierwszy obrazek rekurencyj
 for line in usun_ramke(rekurencyjne[0]):
     odp.write("\n" + line)
 odp.write("\n\nIlość obrazków poprawnych: {} \nnaprawialnych: {} \nnienaprawialnych: {} \nNajwiększa ilość błędów w jednym obrazku: {}".format(poprawne, naprawialne, nienaprawialne, max_bledy))
+
 
 odp.close()
 file.close()
